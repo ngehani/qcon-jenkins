@@ -27,8 +27,7 @@ node {
         sh "docker login -u ${env.DOCKERHUB_USERNAME} -p ${env.DOCKERHUB_PASSWORD} -e ngehani@mesosphere.com"
         sh "docker push ngehanidcos/qcon-jenkins:${gitCommit()}"
     }
-}
-// Deploy
+    // Deploy
     stage 'Deploy'
 
     marathon(
@@ -39,3 +38,4 @@ node {
         appId: 'nginx-neil',
         docker: "ngehanidcos/qcon-jenkins:${gitCommit()}".toString()
     )
+}
