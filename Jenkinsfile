@@ -24,7 +24,18 @@ node {
             usernameVariable: 'DOCKERHUB_USERNAME'
         ]]
     ) {
-        sh "docker login -u ${env.DOCKERHUB_USERNAME} -p ${env.DOCKERHUB_PASSWORD} -e demo@mesosphere.com"
+        sh "docker login -u ${env.DOCKERHUB_USERNAME} -p ${env.DOCKERHUB_PASSWORD} -e ngehani@mesosphere.com"
         sh "docker push ngehanidcos/qcon-jenkins:${gitCommit()}"
     }
 }
+// Deploy
+    stage 'Deploy'
+
+    marathon(
+        url: 'http://marathon.mesos:8080',
+        forceUpdate: false,
+        credentialsId: 'dcos-token',
+        filename: 'marathon.json',
+        appId: 'nginx-neil',
+        docker: "ngehanidcos/qcon-jenkins:${gitCommit()}".toString()
+    )
